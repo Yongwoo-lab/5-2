@@ -16,8 +16,6 @@ function DetailPage() {
     }
   }, [id]);
 
-  if (!student) return <p>로딩 중...</p>;
-
   return (
     <div className="container mt-5">
       <h1 className="text-center">학생 상세 정보</h1>
