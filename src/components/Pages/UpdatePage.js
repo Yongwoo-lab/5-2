@@ -57,6 +57,7 @@ function UpdatePage({ handleUpdate }) {
     const updatedData = { ...formData, [name]: value };
 
     setFormData(updatedData);
+
     setModificationCount((prevCount) => prevCount + 1);
 
     try {
@@ -77,9 +78,10 @@ function UpdatePage({ handleUpdate }) {
 
   const handleBack = () => {
     if (!validate()) {
-      return;
+      return; 
     }
-    navigate('/list');
+    navigate('/list'); 
+  };
 
   return (
     <div className="container mt-5">
@@ -140,7 +142,6 @@ function UpdatePage({ handleUpdate }) {
       </form>
     </div>
   );
-}
 }
 
 export default UpdatePage;
