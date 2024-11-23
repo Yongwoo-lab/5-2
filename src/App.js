@@ -25,12 +25,20 @@ function App() {
     fetchStudents();
   }, []);
 
+  const handleUpdate = (updatedStudent) => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student.id === updatedStudent.id ? updatedStudent : student
+      )
+    );
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       try {
         const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         if (!response.ok) throw new Error(`DELETE error! status: ${response.status}`);
-        fetchStudents();
+        setStudents((prevStudents) => prevStudents.filter((student) => student.id !== id));
       } catch (error) {
         console.error('삭제 실패:', error);
       }
@@ -60,7 +68,10 @@ function App() {
           }
         />
         <Route path="/create" element={<CreatePage fetchStudents={fetchStudents} />} />
-        <Route path="/update/:id" element={<UpdatePage fetchStudents={fetchStudents} />} />
+        <Route
+          path="/update/:id"
+          element={<UpdatePage handleUpdate={handleUpdate} />}
+        />
         <Route path="/detail/:id" element={<DetailPage />} />
       </Routes>
     </Router>

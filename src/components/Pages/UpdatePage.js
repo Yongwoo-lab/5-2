@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const API_URL = 'https://672b59cd976a834dd026b7d6.mockapi.io/member';
 
-function UpdatePage({ fetchStudents }) {
+function UpdatePage({ handleUpdate }) {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     name: '',
@@ -11,7 +11,6 @@ function UpdatePage({ fetchStudents }) {
     major: '',
     hometown: '',
   });
-  const [modificationCount, setModificationCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -25,19 +24,21 @@ function UpdatePage({ fetchStudents }) {
   const handleChange = async (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const updatedData = { ...formData, [name]: value };
 
-    setModificationCount((prevCount) => prevCount + 1);
+    setFormData(updatedData);
 
     try {
-      await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, [name]: value }),
+        body: JSON.stringify(updatedData),
       });
+
+      if (response.ok) {
+        const updatedStudent = await response.json();
+        handleUpdate(updatedStudent); 
+      }
     } catch (error) {
       console.error('API 업데이트 실패:', error);
     }
@@ -86,7 +87,6 @@ function UpdatePage({ fetchStudents }) {
           className="form-control"
         />
       </div>
-      <p>수정 횟수: {modificationCount}</p>
       <button className="btn btn-secondary mt-3" onClick={() => navigate('/list')}>
         뒤로 가기
       </button>
